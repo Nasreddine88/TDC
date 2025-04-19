@@ -1594,7 +1594,7 @@
                     AVEM
                 </button>
                 <button class="btn btn-orange" onclick="openProcedure('AGENCES_CA.pdf', 'AGENCES CA')">
-                    <i class="fas fa-university"></i>
+                    <i class="fas fa-book"></i>
                     AGENCES CA
                 </button>
                 <button class="btn btn-orange" onclick="openProcedure('COMMUNICATIONS_EQUIPE.pdf', 'COMMUNICATIONS EQUIPE')">
@@ -1657,7 +1657,7 @@
                     FICHE DE PERTE
                 </button>
                 <button class="btn btn-green" onclick="openProcedure('DOSSIERS_SOUS_NET_AVEM.pdf', 'DOSSIERS SOUS NET AVEM')">
-                    <i class="fas fa-folder"></i>
+                    <i class="fas fa-paste"></i>
                     DOSSIERS SOUS NET AVEM
                 </button>
                 <button class="btn btn-green" onclick="openProcedure('SUSPENS_5_ET_1.pdf', 'SUSPENS 5 ET 1')">
@@ -1712,19 +1712,19 @@
                     MASTERCARD
                 </button>
                 <button class="btn btn-blue" onclick="openProcedure('TOPNA', 'TOPNA')">
-                    <i class="fas fa-exchange-alt"></i>
+                    <i class="fas fa-unlink"></i>
                     TOPNA
                 </button>
                 <button class="btn btn-blue" onclick="openProcedure('E-CONTESTATION', 'E-CONTESTATION')">
-                    <i class="fas fa-comment-dots"></i>
+                    <i class="fas fa-share-square"></i>
                     E-CONTESTATION
                 </button>
                 <button class="btn btn-blue" onclick="openProcedure('NETSIZE', 'NETSIZE')">
-                    <i class="fas fa-expand"></i>
+                    <i class="fa fa-comment"></i>
                     NETSIZE
                 </button>
                 <button class="btn btn-blue" onclick="openProcedure('DIAGPORTEUR', 'DIAGPORTEUR')">
-                    <i class="fas fa-diagnoses"></i>
+                    <i class="fas fa-search"></i>
                     DIAGPORTEUR
                 </button>
                 <button class="btn btn-blue" onclick="openProcedure('CRYPTO_CONVERT', 'CRYPTO CONVERT')">
@@ -1736,12 +1736,16 @@
                     PUCC
                 </button>
                 <button class="btn btn-blue" onclick="openProcedure('IMAGENOW', 'IMAGENOW')">
-                    <i class="fas fa-image"></i>
+                    <i class="fa fa-folder" aria-hidden="true"></i>
                     IMAGENOW
                 </button>
                 <button class="btn btn-blue" onclick="openProcedure('TIM', 'TIM')">
-                    <i class="fas fa-clock"></i>
+                    <i class="fa fa-code" aria-hidden="true"></i>
                     TIM
+                </button>
+                <button class="btn btn-blue" onclick="openProcedure('IP Adresse', 'IP Adresse')">
+                    <i class="fa fa-location-arrow" aria-hidden="true"></i>
+                    IP Adresse
                 </button>
             </div>
             <div class="nav-buttons">
@@ -1895,7 +1899,7 @@
                     PLUSIEURS DOSSIERS MEME CB
                 </button>
                 <button class="btn btn-blue" onclick="openProcedure('TRAITEMENT_SUIVI_VAD.pdf', 'TRAITEMENT SUIVI VAD')">
-                    <i class="fas fa-truck"></i>
+                    <i class="fas fa-edit"></i>
                     TRAITEMENT SUIVI VAD
                 </button>
                 <button class="btn btn-blue" onclick="openProcedure('GUIDE_LANCEUR_RECEVEUR.pdf', 'GUIDE LANCEUR/RECEVEUR')">
@@ -2245,6 +2249,7 @@ const allItems = [
     { name: 'PUCC', type: 'Logiciel', page: 'software', action: () => openProcedure('PUCC', 'PUCC') },
     { name: 'IMAGENOW', type: 'Logiciel', page: 'software', action: () => openProcedure('IMAGENOW', 'IMAGENOW') },
     { name: 'TIM', type: 'Logiciel', page: 'software', action: () => openProcedure('TIM', 'TIM') },
+    { name: 'IP Adresse', type: 'Logiciel', page: 'software', action: () => openProcedure('IP Adress', 'IP Adresse') },
 
     // Réglementations
     { name: 'MASTERCARD (CHARGEBACK)', type: 'Réglementation', page: 'regulations', action: () => openProcedure('MASTERCARD_CHARGEBACK.pdf', 'MASTERCARD (CHARGEBACK)') },
