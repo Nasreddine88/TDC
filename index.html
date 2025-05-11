@@ -715,12 +715,22 @@
         }
         
         /* Date calculator */
+        .calculators-container {
+            display: flex;
+            gap: 20px;
+            margin: 20px auto;
+            max-width: 900px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
         .calculator {
+            flex: 1;
+            min-width: 300px;
+            max-width: 400px;
             background: rgba(255, 255, 255, 0.98);
             border-radius: 10px;
             padding: 20px;
-            margin: 20px auto;
-            max-width: 500px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
@@ -759,6 +769,11 @@
             font-weight: bold;
         }
 
+        /* Style pour les inputs date en français */
+        input[type="date"] {
+            font-family: 'Arial', sans-serif;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar {
@@ -780,6 +795,14 @@
             
             .procedure-buttons {
                 grid-template-columns: 1fr;
+            }
+            
+            .calculators-container {
+                flex-direction: column;
+            }
+            
+            .calculator {
+                max-width: 100%;
             }
         }
 
@@ -1943,12 +1966,23 @@
                 </button>
             </div>
 
-            <div class="calculator">
-                <h3>CALCUL DES DELAIS</h3>
-                <input type="date" id="dateInput">
-                <input type="number" id="daysInput" placeholder="Nombre de jours (+/-)">
-                <button onclick="calculateDays()">CALCULER</button>
-                <div class="result" id="result"></div>
+            <!-- Nouvelle calculatrice avec deux sections -->
+            <div class="calculators-container">
+                <div class="calculator">
+                    <h3>CALCUL DES JOURS OUVRÉS</h3>
+                    <input type="date" id="dateInputWorkingDays">
+                    <input type="number" id="daysInputWorkingDays" placeholder="Nombre de jours (+/-)">
+                    <button onclick="calculateWorkingDays()">CALCULER</button>
+                    <div class="result" id="resultWorkingDays"></div>
+                </div>
+                
+                <div class="calculator">
+                    <h3>CALCUL DES JOURS OUVRABLES</h3>
+                    <input type="date" id="dateInputBusinessDays">
+                    <input type="number" id="daysInputBusinessDays" placeholder="Nombre de jours (+/-)">
+                    <button onclick="calculateBusinessDays()">CALCULER</button>
+                    <div class="result" id="resultBusinessDays"></div>
+                </div>
             </div>
 
             <div class="nav-buttons">
@@ -2135,51 +2169,83 @@
             navigate('procedure-info');
         }
 
-        // Date calculator function
-        function calculateDays() {
-            const dateInput = document.getElementById('dateInput').value;
-            const daysInput = parseInt(document.getElementById('daysInput').value) || 0;
+        // Jours fériés en France
+        const holidays = [
+            "2025-01-01", "2025-04-21", "2025-05-01", "2025-05-08", 
+            "2025-05-29", "2025-06-09", "2025-07-14", "2025-08-15",
+            "2025-11-01", "2025-11-11", "2025-12-25"
+        ];
+
+        function isHoliday(date) {
+            const dateStr = date.toISOString().split('T')[0];
+            return holidays.includes(dateStr);
+        }
+
+        function isWeekend(date) {
+            return date.getDay() === 0 || date.getDay() === 6;
+        }
+
+        function formatFrenchDate(date) {
+            return date.toLocaleDateString('fr-FR', {
+                weekday: 'long', 
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric'
+            });
+        }
+
+        function calculateWorkingDays() {
+            const dateInput = document.getElementById('dateInputWorkingDays').value;
+            const daysInput = parseInt(document.getElementById('daysInputWorkingDays').value) || 0;
             
             if (!dateInput) {
                 alert('Veuillez sélectionner une date');
                 return;
             }
             
-            const selectedDate = new Date(dateInput);
-            const today = new Date();
+            let date = new Date(dateInput);
+            let daysCount = 0;
+            const step = daysInput > 0 ? 1 : -1;
+            const targetDays = Math.abs(daysInput);
             
-            // Calculate difference in days
-            let diffTime, diffDays;
-            
-            if (daysInput !== 0) {
-                // Calculate new date based on days input
-                selectedDate.setDate(selectedDate.getDate() + daysInput);
-                diffTime = selectedDate - new Date(dateInput);
-                diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                
-                document.getElementById('result').innerHTML = `
-                    Nouvelle date: ${selectedDate.toLocaleDateString()}<br>
-                    Différence: ${diffDays} jour(s)
-                `;
-            } else {
-                // Calculate difference between selected date and today
-                diffTime = Math.abs(selectedDate - today);
-                diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-                
-                if (selectedDate > today) {
-                    document.getElementById('result').innerHTML = `
-                        Dans ${diffDays} jour(s) (${selectedDate.toLocaleDateString()})
-                    `;
-                } else if (selectedDate < today) {
-                    document.getElementById('result').innerHTML = `
-                        Il y a ${diffDays} jour(s) (${selectedDate.toLocaleDateString()})
-                    `;
-                } else {
-                    document.getElementById('result').innerHTML = `
-                        C'est aujourd'hui!
-                    `;
+            while (daysCount < targetDays) {
+                date.setDate(date.getDate() + step);
+                if (!isWeekend(date) && !isHoliday(date)) {
+                    daysCount++;
                 }
             }
+            
+            document.getElementById('resultWorkingDays').innerHTML = `
+                <strong>Date calculée :</strong> ${formatFrenchDate(date)}<br>
+                <strong>Jours ouvrés :</strong> ${Math.abs(daysInput)} jour(s)
+            `;
+        }
+
+        function calculateBusinessDays() {
+            const dateInput = document.getElementById('dateInputBusinessDays').value;
+            const daysInput = parseInt(document.getElementById('daysInputBusinessDays').value) || 0;
+            
+            if (!dateInput) {
+                alert('Veuillez sélectionner une date');
+                return;
+            }
+            
+            let date = new Date(dateInput);
+            let daysCount = 0;
+            const step = daysInput > 0 ? 1 : -1;
+            const targetDays = Math.abs(daysInput);
+            
+            while (daysCount < targetDays) {
+                date.setDate(date.getDate() + step);
+                if (!isWeekend(date)) {
+                    daysCount++;
+                }
+            }
+            
+            document.getElementById('resultBusinessDays').innerHTML = `
+                <strong>Date calculée :</strong> ${formatFrenchDate(date)}<br>
+                <strong>Jours ouvrables :</strong> ${Math.abs(daysInput)} jour(s)
+            `;
         }
 
         // Search functionality
@@ -2385,8 +2451,11 @@ const allItems = [
 
         // Set today's date as default in the date input
         document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('dateInput').value = today;
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            document.getElementById('dateInputWorkingDays').value = `${today.getFullYear()}-${month}-${day}`;
+            document.getElementById('dateInputBusinessDays').value = `${today.getFullYear()}-${month}-${day}`;
             
             // Set up planning tabs
             document.querySelectorAll('.planning-tab').forEach(tab => {
@@ -2399,7 +2468,7 @@ const allItems = [
                     });
                     
                     document.getElementById(`${this.dataset.week}-week`).classList.add('active');
-                });
+                }); 
             });
             
             // Initialize all buttons to use openProcedure
